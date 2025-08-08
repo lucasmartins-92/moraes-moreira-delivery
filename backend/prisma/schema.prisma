@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Pombo {
+  id              Int      @id @default(autoincrement())
+  apelido         String   @unique
+  fotoUrl         String?
+  velocidadeMedia Float
+  ativo           Boolean  @default(true)
+  cartas          Carta[]
+}
+
+model Cliente {
+  id              Int      @id @default(autoincrement())
+  nome            String
+  email           String   @unique
+  dataNascimento  DateTime
+  endereco        String
+  cartasEnviadas  Carta[]  @relation("Remetente")
+}
+
+enum StatusCarta {
+  NA_FILA
+  ENVIADO
+  ENTREGUE
+  REQUER_ATENCAO
+}
+
+model Carta {
+  id                    Int         @id @default(autoincrement())
+  conteudo              String
+  nomeDestinatario      String
+  enderecoDestinatario  String
+  status                StatusCarta @default(NA_FILA)
+  observacao            String?
+  criada                DateTime    @default(now())
+  atualizada            DateTime    @updatedAt
+  remetenteId           Int
+  remetente             Cliente     @relation("Remetente", fields: [remetenteId], references: [id])
+  pomboId               Int
+  pombo                 Pombo       @relation(fields: [pomboId], references: [id])
+}
