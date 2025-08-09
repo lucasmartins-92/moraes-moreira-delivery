@@ -82,9 +82,22 @@ function PombosPage() {
         createItem,
         handleEditClick,
         handleEditFormChange,
-        handleEditSubmit,
+        updateItem,
         cancelEdit,
     } = useEntityManagement<Pombo, CreatePomboDto>('/pombos', initialCreateState);
+
+    const handleEditarPomboSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (pomboEmEdicao) {
+            const dadosAtualizados = {
+                apelido: pomboEmEdicao.apelido,
+                velocidadeMedia: Number(pomboEmEdicao.velocidadeMedia),
+                ativo: pomboEmEdicao.ativo,
+            };
+
+            await updateItem(pomboEmEdicao.id, dadosAtualizados);
+        }
+    };
 
     const { sortedData } = useTableSort(pombos, 'id');
 
@@ -110,7 +123,7 @@ function PombosPage() {
             <DataTable data={sortedData} columns={colunasPombos} />
 
             {pomboEmEdicao && (
-                <form onSubmit={handleEditSubmit}>
+                <form onSubmit={handleEditarPomboSubmit}>
                     <input name="apelido" value={pomboEmEdicao.apelido} onChange={handleEditFormChange} />
                     <input name="velocidadeMedia" value={pomboEmEdicao.velocidadeMedia} onChange={handleEditFormChange} />
                     <select name="ativo" value={String(pomboEmEdicao.ativo)} onChange={handleEditFormChange}>

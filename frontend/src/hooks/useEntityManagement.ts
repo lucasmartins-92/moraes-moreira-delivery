@@ -42,8 +42,14 @@ export function useEntityManagement<EntityType extends { id: number }, CreateDto
 
             setCreateFormData(initialCreateFormState);
             fetchData();
-        } catch (error) {
+        } catch (error: any) {
             console.error(`Erro ao criar item em ${endpoint}:`, error);
+            if (error.response) {
+                console.error('Detalhes do erro do backend:', error.response.data);
+                alert(`Erro do servidor: ${error.response.data.message || 'Verifique o console do backend'}`);
+            } else {
+                alert('Falha ao se comunicar com a API. Verifique o console.');
+            }
             throw error;
         }
     };
@@ -61,23 +67,17 @@ export function useEntityManagement<EntityType extends { id: number }, CreateDto
         }));
     };
 
-    const handleEditSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (entityInEdit) {
-            try {
-                const { id, ...dataToUpdate } = entityInEdit;
-                const dataToSend = {
-                    ...dataToUpdate,
-                    velocidadeMedia: parseFloat(dataToUpdate.velocidadeMedia),
-                };
-                await api.patch(`${endpoint}/${id}`, dataToSend);
-                setEntityInEdit(null);
-                fetchData();
-            } catch (error) {
-                console.error(`Erro ao editar item em ${endpoint}/${entityInEdit.id}:`, error);
-            }
+    const updateItem = async (id: number, data: Partial<EntityType>) => {
+        try {
+            await api.patch(`${endpoint}/${id}`, data);
+            setEntityInEdit(null); 
+            fetchData(); 
+        } catch (error) {
+            console.error(`Erro ao editar item em ${endpoint}/${id}:`, error);
+            throw error;
         }
     };
+
 
     const cancelEdit = () => {
         setEntityInEdit(null);
@@ -91,7 +91,7 @@ export function useEntityManagement<EntityType extends { id: number }, CreateDto
         createItem,
         handleEditClick,
         handleEditFormChange,
-        handleEditSubmit,
+        updateItem,
         cancelEdit,
     };
 }
