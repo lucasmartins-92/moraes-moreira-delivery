@@ -8,8 +8,4 @@ export class CreatePomboDto {
     @IsNumber()
     @IsNotEmpty()
     velocidadeMedia: number;
-
-    @IsString()
-    @IsOptional()
-    fotoUrl?: string;
 }

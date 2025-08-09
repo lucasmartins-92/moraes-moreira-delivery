@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { useState } from 'react';
+import PombosPage from './pages/PombosPage';
+import ClientesPage from './pages/ClientesPage';
+import CartasPage from './pages/CartasPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [paginaAtual, setPaginaAtual] = useState('pombos');
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="App">
+      <h1>Pombo Express</h1>
+
+      <nav>
+        <button onClick={() => setPaginaAtual('pombos')}>
+          Gerenciar Pombos
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+        <button onClick={() => setPaginaAtual('clientes')}>
+          Gerenciar Clientes
+        </button>
+        <button onClick={() => setPaginaAtual('cartas')}>
+          Envio de Cartas
+        </button>
+        <button onClick={() => setPaginaAtual('dashboard')}>
+          Dashboard
+        </button>
+      </nav>
+      <hr />
+
+      {paginaAtual === 'pombos' && <PombosPage />}
+      {paginaAtual === 'clientes' && <ClientesPage />}
+      {paginaAtual === 'cartas' && <CartasPage />}
+      {paginaAtual === 'dashboard' && <DashboardPage />}
+    </div>
+  );
 }
 
-export default App
+export default App;

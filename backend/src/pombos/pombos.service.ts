@@ -5,11 +5,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PombosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  create(createPomboDto: CreatePomboDto) {
+  create(createPomboDto: CreatePomboDto, foto?: Express.Multer.File) {
     return this.prisma.pombo.create({
-      data: createPomboDto,
+      data: {
+        ...createPomboDto,
+        velocidadeMedia: Number(createPomboDto.velocidadeMedia),
+        fotoUrl: foto ? `/uploads/${foto.filename}` : null,
+      },
     });
   }
 

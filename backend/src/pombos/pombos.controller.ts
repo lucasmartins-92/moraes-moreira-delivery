@@ -1,15 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { PombosService } from './pombos.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { CreatePomboDto } from './dto/create-pombo.dto';
 import { UpdatePomboDto } from './dto/update-pombo.dto';
 
+export const storageOptions = {
+  storage: diskStorage({
+    destination: './public/uploads',
+    filename: (req, file, callback) => {
+      const randomName = Array(32)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 16).toString(16))
+        .join('');
+      callback(null, `${randomName}${extname(file.originalname)}`);
+    },
+  }),
+};
+
 @Controller('pombos')
 export class PombosController {
-  constructor(private readonly pombosService: PombosService) {}
+  constructor(private readonly pombosService: PombosService) { }
 
   @Post()
-  create(@Body() createPomboDto: CreatePomboDto) {
-    return this.pombosService.create(createPomboDto);
+  @UseInterceptors(FileInterceptor('foto', storageOptions))
+  create(
+    @Body() createPomboDto: CreatePomboDto,
+    @UploadedFile() foto?: Express.Multer.File,
+  ) {
+    return this.pombosService.create(createPomboDto, foto);
   }
 
   @Get()
