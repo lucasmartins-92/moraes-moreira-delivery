@@ -1,8 +1,8 @@
-# Desafio Técnico Oper - Sistema de Delivery Aéreo
+# Sistema de Delivery Aéreo
 
 ## 1. Descrição
 
-Este repositório contém a solução completa para o desafio técnico proposto pela Oper. O projeto é uma aplicação full-stack que simula um sistema de gerenciamento para um serviço de delivery aéreo de cartas, utilizando pombos-correio.
+O projeto é uma aplicação full-stack, desenvolvida para um desafio técnico, que simula um sistema de gerenciamento para um serviço de delivery aéreo de cartas, utilizando pombos-correio.
 
 A aplicação é composta por uma API RESTful no backend para gerenciar as entidades e regras de negócio, e um Single-Page Application (SPA) no frontend para interação do usuário.
 
